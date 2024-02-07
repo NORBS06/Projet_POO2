@@ -1,0 +1,282 @@
+import java.util.Random;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SnakeApp extends Application {
+	
+	private List<Rectangle>snakeBody =new ArrayList<>();
+    private int snakeHeadXPos = 150;
+    private int snakeHeadYPos = 100;
+    private Rectangle snakeHead;
+    private Rectangle boundaries;
+    private Rectangle food;
+    private Random rand = new Random();
+    private int foodPosX;
+    private int foodPosY;
+    private Label scoreLabel;
+    private int score=0;
+    private int directionX=10;
+    private int directionY=0;
+    private StackPane layer;
+    private boolean isOver=false;
+    
+    
+    @Override
+    public void start(Stage primaryStage) {
+        // Créer le snakeHead à déplacer
+        snakeHead = new Rectangle(10, 10, Color.BLACK);
+        snakeHead.setTranslateX(snakeHeadXPos);
+        snakeHead.setTranslateY(snakeHeadYPos);
+        
+        
+        // rectangle pour afficher les limites du serpent
+        boundaries=new Rectangle();
+        boundaries.setWidth(800);
+        boundaries.setHeight(400);
+        boundaries.setFill(null);
+        boundaries.setStroke(Color.BLACK);
+        boundaries.setStrokeWidth(10);
+        
+        
+        // Rectangle pour representer la nourriture du serpent
+        food=new Rectangle(10, 10, Color.RED);
+        foodPosX=rand.nextInt(800)-400;
+        foodPosY=rand.nextInt(400)-200;
+        food.setTranslateX(foodPosX);
+        food.setTranslateY(foodPosY);
+        
+        // Label pour afficher le score
+        scoreLabel=new Label();
+        scoreLabel.setText(String.format("score: %d",0));
+        scoreLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        scoreLabel.setTranslateX(-375);
+        scoreLabel.setTranslateY(-300);
+  
+        
+        //Panneau principal
+        layer = new StackPane();
+        layer.getChildren().addAll(boundaries,snakeHead,food,scoreLabel);
+        layer.setPrefSize(1000, 720);
+        
+        
+        // Ecouteur d'evenement sur les touche directionnelles
+        layer.setOnKeyPressed(event -> 
+        {
+            switch (event.getCode()) 
+            {
+                case UP:	             
+                	if(directionY!=10) {
+                		directionX=0;
+                		directionY=-10;
+                	}
+                    break;
+                case DOWN:	                  
+                	if(directionY!=-10) {
+                		directionX=0;
+                		directionY=10;
+                	}
+                    break;
+                case LEFT:
+                	if(directionX!=10) {
+                		directionX=-10;
+                		directionY=0;
+                	}
+                    break;
+                case RIGHT:
+                    if(directionX!=-10) {
+                    	directionX=10;
+                    	directionY=0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+        
+
+        // Creer la scene
+        Scene scene = new Scene(layer);
+
+        // Definir la scene et afficher la fenetre
+        primaryStage.setTitle("Snake Game");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // Permettre a la scene de recevoir les evenements de touche
+        layer.requestFocus();
+        
+        //Demarrer les evenement periodique pour deplacer le serpent en continue
+        startGameLoop();
+    }
+    private void moveSnakeHead(int deltaX, int deltaY) {
+        double oldXPos=snakeHeadXPos;
+        double oldYPos=snakeHeadYPos;
+        if(!isOver) {
+        	// si le serpent arrive a une limite il reapparait de l'autre cote
+	        if(snakeHeadXPos>=-390 && snakeHeadXPos<=390)
+	        	snakeHeadXPos += deltaX;
+	        else if(snakeHeadXPos>390)
+	        	snakeHeadXPos=-390;
+	        else
+	        	snakeHeadXPos=390;
+	        if(snakeHeadYPos>=-190 && snakeHeadYPos<=190)
+	        	snakeHeadYPos += deltaY;
+	        else if(snakeHeadYPos>190)
+	        	snakeHeadYPos=-190;
+	        else
+	        	snakeHeadYPos=190;
+	        
+	        snakeHead.setTranslateX(snakeHeadXPos);
+	        snakeHead.setTranslateY(snakeHeadYPos);
+        
+	        //mise a jour des segment du serpent
+	        updateSnakeBodyPos(oldXPos,oldYPos);
+	        
+	        // verification si le serpent a mange la nourriture et respawn de la nourriture
+	        checkFood();
+	        
+	        // Verification si le serpent s'est mordu
+	        Duration delay = Duration.millis(150);
+	        Timeline timer = new Timeline(new KeyFrame(delay, event -> {
+	        	checkSelfCollision();
+	        }));
+	        timer.play();
+        }
+        
+    }
+    
+    private void updateSnakeBodyPos(double posX,double posY) {
+    	
+    	List<Double> oldSnakeHeadXPos=new ArrayList<>();
+    	List<Double> oldSnakeHeadYPos=new ArrayList<>();
+    	
+    	//sauvegarde de la position des segments
+    	for(int i=0;i<snakeBody.size();i++) {
+    		
+    			oldSnakeHeadXPos.add(snakeBody.get(i).getTranslateX());
+        		oldSnakeHeadYPos.add(snakeBody.get(i).getTranslateY());
+    		
+    	}
+    	
+    	// decalage des segments
+    	//Premier segement depend de la position de la tete
+    	if (snakeBody.size()>0)
+    	{
+    		snakeBody.get(0).setTranslateX(posX);
+    		snakeBody.get(0).setTranslateY(posY);
+    		snakeBody.get(0).setFill(Color.DARKGREEN);
+    	}
+    	//Pour le reste on decale d'un cran les segments
+    	if(snakeBody.size()>1) {
+	    	for (int i = 1; i<snakeBody.size(); i++) 
+	    	{
+	    		snakeBody.get(i).setTranslateX(oldSnakeHeadXPos.get(i-1));
+	    		snakeBody.get(i).setTranslateY(oldSnakeHeadYPos.get(i-1));
+	    		snakeBody.get(i).setFill(Color.GREEN);
+	    	}
+    	}
+
+    }
+    private void checkFood() {
+    	//verification si le serpent a mange de la nourriture
+    	if(foodPosX-10<snakeHeadXPos && snakeHeadXPos<foodPosX+10 && 
+    			foodPosY-10<snakeHeadYPos && snakeHeadYPos<foodPosY+10) {
+    		boolean isFoodPosOk=true;
+    		//respawn de nourriture et verification si la nourriture ne spawn pas sur le serpent
+    		do {
+    			foodPosX=rand.nextInt(790)-390;
+    			foodPosY=rand.nextInt(390)-190;
+    			isFoodPosOk=true;
+    			if(snakeBody.size()>=2) 
+    			{ 			
+    				for(Rectangle seg:snakeBody)	
+    				{
+    					if(foodPosX==seg.getTranslateX() && foodPosY==seg.getTranslateY())
+    					{
+    						isFoodPosOk=false;
+    						break;
+    					}
+    				}
+    			}
+    		}while(!isFoodPosOk);
+			food.setTranslateX(foodPosX);
+			food.setTranslateY(foodPosY);
+            score+=1;
+            scoreLabel.setText(String.format("score: %d",score));
+            
+            snakeBody.add(new Rectangle(10,10,Color.BLACK));
+            layer.getChildren().add(snakeBody.get(snakeBody.size()-1));    	}
+    }
+    private void checkSelfCollision() {
+    	for (int i =1;i<snakeBody.size();i++) {
+    		if(snakeHead.getTranslateX()==snakeBody.get(i).getTranslateX() && 
+    				snakeHead.getTranslateY()==snakeBody.get(i).getTranslateY())
+    		{
+    			System.out.println("touched");
+    			
+    			//rectangle qui masque tout le jeu
+    			Rectangle gameOverMask=new Rectangle(1000,720,Color.BLACK);
+    			
+    			//Vertical box pour ranger le message de fin et le bouton quitter
+    			VBox endBox=new VBox(100);
+    			endBox.setPadding(new Insets(25));
+    			endBox.setAlignment(Pos.CENTER);
+    			
+    			// Message de fin de jeu
+    			Label endMessage=new Label();
+    			endMessage.setText(String.format("It is over your score is : %d",score));
+    			endMessage.setTextFill(Color.WHITE);
+    			endMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+    			
+    			//Bouton quitter
+    			Button quitButton =new Button();
+    			quitButton.setText("close");
+    			quitButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+    			quitButton.setPrefSize(200, 100);
+    			quitButton.setOnAction(e->{
+    				Platform.exit();
+    			});
+    			isOver=true;
+    			
+    			//Ajout des element dans la VBOX
+    			endBox.getChildren().addAll(endMessage,quitButton);
+    			
+    			//Ajout de la VBOX dans la scene
+    			layer.getChildren().addAll(gameOverMask,endBox);
+    		}
+    	}
+    }
+    private void startGameLoop() {
+    	
+    	//Creation d'un evenement periodique.
+    	Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+    		// toutes les 50 millisecs on appelle la fonction moveSnakeHead 
+            moveSnakeHead(directionX,directionY);
+        }));
+    	timeline.setCycleCount(Timeline.INDEFINITE);
+    	timeline.play();
+    }
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
