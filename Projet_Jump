@@ -1,4 +1,4 @@
-package com.adrien.jumpfx;
+package com.Adrien_Vayuna_Hachim.Jump;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 
-public class Jump extends Application {
+public class Projet_Jump extends Application {
 
     //maps keycode to boolean - keycode is the javafx enumeration
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
@@ -150,7 +150,6 @@ public class Jump extends Application {
         timer.start();
     }
     public static void main(String[] args) {
-
         launch(args);
     }
 }
