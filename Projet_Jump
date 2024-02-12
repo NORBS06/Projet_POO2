@@ -1,4 +1,4 @@
-package com.Adrien_Vayuna_Hachim.Jump;
+package com.Adrien_Vayuna_Hachim.JumpOP
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
