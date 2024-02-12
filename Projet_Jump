@@ -1,4 +1,4 @@
-package com.Adrien_Vayuna_Hachim.JumpOP
+package com.Adrien_Vayuna_Hachim.Jump;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 
@@ -22,6 +23,7 @@ public class Projet_Jump extends Application {
     //maps keycode to boolean - keycode is the javafx enumeration
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
     private ArrayList<Node> platforms = new ArrayList<>();
+    private ArrayList<Node> coins = new ArrayList<>();
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane uiRoot = new Pane();
@@ -30,6 +32,7 @@ public class Projet_Jump extends Application {
     private Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
     private int levelWidth;
+    private boolean dialogEvent = false, running = true;
     private void initContent(){
         Rectangle bg = new Rectangle(1280, 720);
         bg.setFill(Color.web("EAF4F4",1.0));
@@ -45,6 +48,9 @@ public class Projet_Jump extends Application {
                         Node platform = createEntity(j*60, i *60, 60, 60, Color.web("00B9AE",1.0));
                         platforms.add(platform);
                         break;
+                    case '2':
+                    	Node coin = createEntity(j*60, i *60, 60, 60, Color.web("FFFF00",1.0));
+                    	coins.add(coin);
                 }
             }
         }
@@ -71,7 +77,22 @@ public class Projet_Jump extends Application {
             playerVelocity = playerVelocity.add(0, 1);
         }
         movePlayerY((int)playerVelocity.getY());
-        }
+    
+    	for (Node coin : coins) {
+    		if (player.getBoundsInParent().intersects(coin.getBoundsInParent())){
+    			coin.getProperties().put("alive", false);
+    			dialogEvent = true;
+    			running = false;
+    		}
+    	}
+    	for (Iterator<Node> it = coins.iterator(); it.hasNext(); ) {
+    		Node coin = it.next();
+    		if (!(Boolean)coin.getProperties().get("alive")) {
+    			it.remove();
+    			gameRoot.getChildren().remove(coin);
+    		}
+    	}
+    }
 
 
     private void movePlayerX(int value){
@@ -124,6 +145,7 @@ public class Projet_Jump extends Application {
         entity.setTranslateX(x);
         entity.setTranslateY(y);
         entity.setFill(color);
+        entity.getProperties().put("alive", true);
         gameRoot.getChildren().add(entity);
         return entity;
 
