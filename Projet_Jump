@@ -32,6 +32,7 @@ public class Projet_Jump extends Application {
     private int levelWidth;
     private void initContent(){
         Rectangle bg = new Rectangle(1280, 720);
+        bg.setFill(Color.web("EAF4F4",1.0));
         levelWidth = LevelData.LEVEL1[0].length() * 60;
 
         for (int i=0; i< LevelData.LEVEL1.length; i++){
@@ -41,13 +42,13 @@ public class Projet_Jump extends Application {
                     case '0':
                         break;
                     case '1':
-                        Node platform = createEntity(j*60, i *60, 60, 60, Color.GREEN);
+                        Node platform = createEntity(j*60, i *60, 60, 60, Color.web("00B9AE",1.0));
                         platforms.add(platform);
                         break;
                 }
             }
         }
-        player = createEntity(0, 600, 40, 40, Color.BLUE);
+        player = createEntity(0, 600, 40, 40, Color.web("03312E",1.0));
         player.translateXProperty().addListener((obs, old, newValue) -> {
             int offset = newValue.intValue();
             if (offset > 640 && offset < levelWidth-640){
