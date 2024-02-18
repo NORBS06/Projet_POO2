@@ -1,29 +1,41 @@
-package com.Adrien_Vayuna_Hachim.Jump;
-
+package application;
+	
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
 
-public class Projet_Jump extends Application {
+public class Main extends Application {
 
     //maps keycode to boolean - keycode is the javafx enumeration
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
     private ArrayList<Node> platforms = new ArrayList<>();
     private ArrayList<Node> coins = new ArrayList<>();
+    private ArrayList<Node> bomb_kills = new ArrayList<>();
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane uiRoot = new Pane();
@@ -32,12 +44,20 @@ public class Projet_Jump extends Application {
     private Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
     private int levelWidth;
-    private boolean dialogEvent = false, running = true;
+    private int point = 0;
+    private Label score;
     private void initContent(){
         Rectangle bg = new Rectangle(1280, 720);
         bg.setFill(Color.web("EAF4F4",1.0));
         levelWidth = LevelData.LEVEL1[0].length() * 60;
 
+        score=new Label();
+        score.setText(String.format("score: %d",0));
+        score.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        score.setTranslateX(-375);
+        score.setTranslateY(-300);
+        score.setVisible(true);
+        
         for (int i=0; i< LevelData.LEVEL1.length; i++){
             String line = LevelData.LEVEL1[i];
             for (int j=0; j <line.length();j++){
@@ -51,6 +71,11 @@ public class Projet_Jump extends Application {
                     case '2':
                     	Node coin = createEntity(j*60, i *60, 60, 60, Color.web("FFFF00",1.0));
                     	coins.add(coin);
+                    	break;
+                    case '3':
+                    	Node bomb_kill = createEntity(j*60, i *60, 60, 60, Color.web("F00000",1.0));
+                    	bomb_kills.add(bomb_kill);
+                    	break;
                 }
             }
         }
@@ -61,7 +86,7 @@ public class Projet_Jump extends Application {
                 gameRoot.setLayoutX(-(offset-640));
             }
         });
-        appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
+        appRoot.getChildren().addAll(bg, gameRoot, uiRoot, score);
     }
     private void update(){
         if (isPressed(KeyCode.W) && player.getTranslateY() >= 5){
@@ -81,7 +106,8 @@ public class Projet_Jump extends Application {
     	for (Node coin : coins) {
     		if (player.getBoundsInParent().intersects(coin.getBoundsInParent())){
     			coin.getProperties().put("alive", false);
-    			dialogEvent = true;
+    			point+=1;
+    			score.setText(String.format("score: %d",point));
     		}
     	}
     	for (Iterator<Node> it = coins.iterator(); it.hasNext(); ) {
@@ -91,9 +117,45 @@ public class Projet_Jump extends Application {
     			gameRoot.getChildren().remove(coin);
     		}
     	}
+    	
+    	for (Node bomb_kill : bomb_kills) {
+    		if (player.getBoundsInParent().intersects(bomb_kill.getBoundsInParent())){
+    			bomb_kill.getProperties().put("alive", false);
+    			dead();
+    		}
+    	}
+    	for (Iterator<Node> it = bomb_kills.iterator(); it.hasNext(); ) {
+    		Node bomb_kill = it.next();
+    		if (!(Boolean)bomb_kill.getProperties().get("alive")) {
+    			it.remove();
+    			gameRoot.getChildren().remove(bomb_kill);
+    		}
+    	}
     }
 
 
+    private void dead() {
+    	/*Rectangle gameOverMask=new Rectangle(1000,720,Color.BLACK);
+		
+    	VBox endBox=new VBox(100);
+		endBox.setPadding(new Insets(25));
+		endBox.setAlignment(Pos.CENTER);
+		
+		Label endMessage=new Label();
+		endMessage.setText(String.format("It is over your score is : %d",score));
+		endMessage.setTextFill(Color.WHITE);
+		endMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		
+		Button quitButton =new Button();
+		quitButton.setText("close");
+		quitButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		quitButton.setPrefSize(200, 100);
+		quitButton.setOnAction(e->{
+			Platform.exit();
+		});
+		appRoot.getChildren().addAll(gameOverMask,endBox); */
+    }
+    
     private void movePlayerX(int value){
     boolean movingRight = value > 0;
     for (int i=0; i < Math.abs(value);i++){
@@ -159,7 +221,8 @@ public class Projet_Jump extends Application {
         Scene scene = new Scene(appRoot);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
-        primaryStage.setTitle("Sample game");
+        
+        primaryStage.setTitle("Jump");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -169,6 +232,7 @@ public class Projet_Jump extends Application {
                 	update();
             }
         };
+        
         timer.start();
     }
     public static void main(String[] args) {
