@@ -1,5 +1,5 @@
 package application;
-	
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 
-public class Main extends Application {
+public class Projet_Jump extends Application {
 
     //maps keycode to boolean - keycode is the javafx enumeration
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
@@ -121,7 +121,7 @@ public class Main extends Application {
     	for (Node bomb_kill : bomb_kills) {
     		if (player.getBoundsInParent().intersects(bomb_kill.getBoundsInParent())){
     			bomb_kill.getProperties().put("alive", false);
-    			dead();
+    			die();
     		}
     	}
     	for (Iterator<Node> it = bomb_kills.iterator(); it.hasNext(); ) {
@@ -134,26 +134,29 @@ public class Main extends Application {
     }
 
 
-    private void dead() {
-    	/*Rectangle gameOverMask=new Rectangle(1000,720,Color.BLACK);
-		
+    private void die() {
+    	Rectangle gameOverMask=new Rectangle(1280, 720,Color.BLACK);
+    	
     	VBox endBox=new VBox(100);
-		endBox.setPadding(new Insets(25));
+		endBox.setPadding(new Insets(12));
 		endBox.setAlignment(Pos.CENTER);
 		
 		Label endMessage=new Label();
-		endMessage.setText(String.format("It is over your score is : %d",score));
+		endMessage.setText(String.format("It is over"));
 		endMessage.setTextFill(Color.WHITE);
 		endMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		endBox.getChildren().add(endMessage);
 		
 		Button quitButton =new Button();
-		quitButton.setText("close");
+		quitButton.setText("Restart");
 		quitButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		quitButton.setPrefSize(200, 100);
 		quitButton.setOnAction(e->{
 			Platform.exit();
 		});
-		appRoot.getChildren().addAll(gameOverMask,endBox); */
+		endBox.getChildren().add(quitButton);
+		
+    	uiRoot.getChildren().addAll(gameOverMask,endBox);
     }
     
     private void movePlayerX(int value){
