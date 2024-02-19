@@ -1,5 +1,6 @@
-package application;
+package com.Adrien_Vayuna_Hachim.Jump;
 
+	
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -152,7 +153,9 @@ public class Projet_Jump extends Application {
 		quitButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		quitButton.setPrefSize(200, 100);
 		quitButton.setOnAction(e->{
-			Platform.exit();
+			movePlayerX(-400);
+			uiRoot.getChildren().remove(gameOverMask);
+			uiRoot.getChildren().remove(endBox);
 		});
 		endBox.getChildren().add(quitButton);
 		
