@@ -1,5 +1,4 @@
-package com.Adrien_Vayuna_Hachim.Jump;
-
+package application;
 	
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -30,7 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 
-public class Projet_Jump extends Application {
+public class Main extends Application {
 
     //maps keycode to boolean - keycode is the javafx enumeration
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
@@ -53,11 +52,10 @@ public class Projet_Jump extends Application {
         levelWidth = LevelData.LEVEL1[0].length() * 60;
 
         score=new Label();
-        score.setText(String.format("score: %d",0));
-        score.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        score.setTranslateX(-375);
-        score.setTranslateY(-300);
-        score.setVisible(true);
+        score.setText(String.format("score: %d", point));
+        score.setTextFill(Color.BLACK);
+        score.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+        uiRoot.getChildren().add(score);
         
         for (int i=0; i< LevelData.LEVEL1.length; i++){
             String line = LevelData.LEVEL1[i];
@@ -87,7 +85,7 @@ public class Projet_Jump extends Application {
                 gameRoot.setLayoutX(-(offset-640));
             }
         });
-        appRoot.getChildren().addAll(bg, gameRoot, uiRoot, score);
+        appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
     private void update(){
         if (isPressed(KeyCode.W) && player.getTranslateY() >= 5){
@@ -136,28 +134,66 @@ public class Projet_Jump extends Application {
 
 
     private void die() {
+    	
     	Rectangle gameOverMask=new Rectangle(1280, 720,Color.BLACK);
     	
-    	VBox endBox=new VBox(100);
-		endBox.setPadding(new Insets(12));
-		endBox.setAlignment(Pos.CENTER);
+    	VBox endBox=new VBox(50);
+		endBox.setPadding(new Insets(100, 0, 0, 500));
+    	endBox.setAlignment(Pos.CENTER);
 		
 		Label endMessage=new Label();
-		endMessage.setText(String.format("It is over"));
+		endMessage.setText(String.format("It is over!"));
 		endMessage.setTextFill(Color.WHITE);
 		endMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		endBox.getChildren().add(endMessage);
 		
+		Label final_score=new Label();
+		final_score.setText(String.format("Your final score is %d", point));
+		final_score.setTextFill(Color.WHITE);
+		final_score.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		endBox.getChildren().add(final_score);
+		
+		Button RestartButton =new Button();
+		RestartButton.setText("Recommencer");
+		RestartButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		RestartButton.setPrefSize(200, 100);
+		RestartButton.setOnAction(e->{
+			uiRoot.getChildren().remove(gameOverMask);
+			uiRoot.getChildren().remove(endBox);
+			uiRoot.getChildren().remove(score);
+			gameRoot.getChildren().remove(player);
+			point=0;
+			try {
+				start(new Stage());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		endBox.getChildren().add(RestartButton);
+		
+		Button menuButton =new Button();
+		menuButton.setText("Menu");
+		menuButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		menuButton.setPrefSize(200, 100);
+		menuButton.setOnAction(e->{
+			StartScreen menu = new StartScreen();
+			try {
+					menu.start(new Stage());
+	           } catch (Exception ex) {
+	               ex.printStackTrace();
+	           }
+		});
+		endBox.getChildren().add(menuButton);
+		
 		Button quitButton =new Button();
-		quitButton.setText("Restart");
+		quitButton.setText("Quitter");
 		quitButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		quitButton.setPrefSize(200, 100);
 		quitButton.setOnAction(e->{
-			movePlayerX(-400);
-			uiRoot.getChildren().remove(gameOverMask);
-			uiRoot.getChildren().remove(endBox);
+			Platform.exit();
 		});
 		endBox.getChildren().add(quitButton);
+		
 		
     	uiRoot.getChildren().addAll(gameOverMask,endBox);
     }
