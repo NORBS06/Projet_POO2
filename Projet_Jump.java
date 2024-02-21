@@ -3,19 +3,16 @@ package application;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -26,7 +23,6 @@ import javafx.scene.text.FontWeight;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 
 public class Main extends Application {
@@ -36,6 +32,7 @@ public class Main extends Application {
     private ArrayList<Node> platforms = new ArrayList<>();
     private ArrayList<Node> coins = new ArrayList<>();
     private ArrayList<Node> bomb_kills = new ArrayList<>();
+    private ArrayList<Node> doors = new ArrayList<>();
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane uiRoot = new Pane();
@@ -74,6 +71,10 @@ public class Main extends Application {
                     case '3':
                     	Node bomb_kill = createEntity(j*60, i *60, 60, 60, Color.web("F00000",1.0));
                     	bomb_kills.add(bomb_kill);
+                    	break;
+                    case '4':
+                    	Node door = createEntity(j*60, i *60, 60, 60, Color.web("FAB040",1.0));
+                    	doors.add(door);
                     	break;
                 }
             }
@@ -130,32 +131,104 @@ public class Main extends Application {
     			gameRoot.getChildren().remove(bomb_kill);
     		}
     	}
+    	
+    	for (Node door : doors) {
+    		if (player.getBoundsInParent().intersects(door.getBoundsInParent())){
+    			door.getProperties().put("alive", false);
+    			winner_board();
+    		}
+    	}
     }
 
 
-    private void die() {
-    	
-    	Rectangle gameOverMask=new Rectangle(1280, 720,Color.BLACK);
+    private void winner_board() {
+    	Rectangle win=new Rectangle(1280, 720,Color.BLACK);
     	
     	VBox endBox=new VBox(50);
 		endBox.setPadding(new Insets(100, 0, 0, 500));
     	endBox.setAlignment(Pos.CENTER);
-		
-		Label endMessage=new Label();
-		endMessage.setText(String.format("It is over!"));
+    	
+    	Label endMessage=new Label();
+		endMessage.setText(String.format("C'est Fini, Vous avez fini le jeu!!"));
 		endMessage.setTextFill(Color.WHITE);
 		endMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
 		endBox.getChildren().add(endMessage);
 		
 		Label final_score=new Label();
-		final_score.setText(String.format("Your final score is %d", point));
+		final_score.setText(String.format("Votre score final est %d", point));
 		final_score.setTextFill(Color.WHITE);
-		final_score.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		final_score.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 		endBox.getChildren().add(final_score);
 		
 		Button RestartButton =new Button();
 		RestartButton.setText("Recommencer");
-		RestartButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		RestartButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		RestartButton.setPrefSize(200, 100);
+		RestartButton.setOnAction(e->{
+			uiRoot.getChildren().remove(win);
+			uiRoot.getChildren().remove(endBox);
+			uiRoot.getChildren().remove(score);
+			gameRoot.getChildren().remove(player);
+			point=0;
+			try {
+				start(new Stage());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		endBox.getChildren().add(RestartButton);
+		
+		Button menuButton =new Button();
+		menuButton.setText("Menu");
+		menuButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		menuButton.setPrefSize(200, 100);
+		menuButton.setOnAction(e->{
+			StartScreen menu = new StartScreen();
+			try {
+					menu.start(new Stage());
+	           } catch (Exception ex) {
+	               ex.printStackTrace();
+	           }
+		});
+		endBox.getChildren().add(menuButton);
+		
+		Button quitButton =new Button();
+		quitButton.setText("Quitter");
+		quitButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		quitButton.setPrefSize(200, 100);
+		quitButton.setOnAction(e->{
+			Platform.exit();
+		});
+		endBox.getChildren().add(quitButton);
+		
+		
+    	uiRoot.getChildren().addAll(win,endBox);
+	}
+    
+    
+	private void die() {
+    	
+    	Rectangle gameOverMask=new Rectangle(1280, 720,Color.BLACK);
+    	
+    	VBox endBox=new VBox(50);
+		endBox.setPadding(new Insets(100, 0, 0, 480));
+    	endBox.setAlignment(Pos.CENTER);
+		
+		Label endMessage=new Label();
+		endMessage.setText(String.format("C'est Fini, vous êtes mort!"));
+		endMessage.setTextFill(Color.WHITE);
+		endMessage.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		endBox.getChildren().add(endMessage);
+		
+		Label final_score=new Label();
+		final_score.setText(String.format("Votre score final est %d", point));
+		final_score.setTextFill(Color.WHITE);
+		final_score.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		endBox.getChildren().add(final_score);
+		
+		Button RestartButton =new Button();
+		RestartButton.setText("Recommencer");
+		RestartButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 		RestartButton.setPrefSize(200, 100);
 		RestartButton.setOnAction(e->{
 			uiRoot.getChildren().remove(gameOverMask);
@@ -173,7 +246,7 @@ public class Main extends Application {
 		
 		Button menuButton =new Button();
 		menuButton.setText("Menu");
-		menuButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		menuButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 		menuButton.setPrefSize(200, 100);
 		menuButton.setOnAction(e->{
 			StartScreen menu = new StartScreen();
@@ -187,7 +260,7 @@ public class Main extends Application {
 		
 		Button quitButton =new Button();
 		quitButton.setText("Quitter");
-		quitButton.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+		quitButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 		quitButton.setPrefSize(200, 100);
 		quitButton.setOnAction(e->{
 			Platform.exit();

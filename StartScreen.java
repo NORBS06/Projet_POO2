@@ -33,15 +33,15 @@ public class StartScreen extends Application {
            primaryStage.close();
        });
 
-//       tutorialButton.setOnAction(e -> {
-//           Tuto tuto = new Tuto(); 
-//           try {
-//               tuto.start(new Stage());
-//           } catch (Exception ex) {
-//               ex.printStackTrace();
-//           }
-//           primaryStage.close();
-//       });
+       tutorialButton.setOnAction(e -> {
+    	   Tutorial tuto = new Tutorial(); 
+           try {
+               tuto.start(new Stage());
+           } catch (Exception ex) {
+               ex.printStackTrace();
+           }
+           primaryStage.close();
+       });
 
        quitButton.setOnAction(e -> primaryStage.close());
 
