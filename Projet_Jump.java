@@ -33,6 +33,7 @@ public class Main extends Application {
     private ArrayList<Node> coins = new ArrayList<>();
     private ArrayList<Node> bomb_kills = new ArrayList<>();
     private ArrayList<Node> doors = new ArrayList<>();
+    
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane uiRoot = new Pane();
@@ -43,6 +44,8 @@ public class Main extends Application {
     private int levelWidth;
     private int point = 0;
     private Label score;
+    
+    
     private void initContent(){
         Rectangle bg = new Rectangle(1280, 720);
         bg.setFill(Color.web("EAF4F4",1.0));
@@ -86,8 +89,11 @@ public class Main extends Application {
                 gameRoot.setLayoutX(-(offset-640));
             }
         });
+        
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
+    
+
     private void update(){
         if (isPressed(KeyCode.W) && player.getTranslateY() >= 5){
             jumpPlayer();
@@ -290,6 +296,8 @@ public class Main extends Application {
         player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
         }
     }
+    
+
     private void movePlayerY(int value){
         boolean movingDown = value > 0;
         for (int i=0; i < Math.abs(value);i++){
@@ -310,12 +318,16 @@ public class Main extends Application {
             player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
         }
     }
+    
+
     private void jumpPlayer(){
     if(canJump){
         playerVelocity = playerVelocity.add(0, -30);
         canJump = false;
         }
     }
+    
+
     private Node createEntity(int x, int y, int w, int h, Color color){
         Rectangle entity = new Rectangle(w, h);
         entity.setTranslateX(x);
@@ -326,6 +338,8 @@ public class Main extends Application {
         return entity;
 
     }
+    
+    
     private boolean isPressed(KeyCode key){
     return keys.getOrDefault(key, false);
     }
@@ -339,6 +353,9 @@ public class Main extends Application {
         
         primaryStage.setTitle("Jump");
         primaryStage.setScene(scene);
+        primaryStage.setMaxHeight(720);
+        primaryStage.setMaxWidth(1280);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         AnimationTimer timer = new AnimationTimer() {
@@ -350,6 +367,8 @@ public class Main extends Application {
         
         timer.start();
     }
+    
+
     public static void main(String[] args) {
         launch(args);
     }

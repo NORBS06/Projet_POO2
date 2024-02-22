@@ -40,6 +40,7 @@ public class Tutorial extends Main {
     private int levelWidth;
     private int point = 0;
     private Label score;
+    
 	
 	private void initContent(){
         Rectangle bg = new Rectangle(1280, 720);
@@ -84,10 +85,35 @@ public class Tutorial extends Main {
                 gameRoot.setLayoutX(-(offset-640));
             }
         });
+        
+        Label coin_mess=new Label();
+		coin_mess.setText(String.format("Toucher avec les carres jaune\n pour obtenir des points"));
+		coin_mess.setAlignment(Pos.CENTER);
+		coin_mess.setTextFill(Color.BLACK);
+		coin_mess.setPadding(new Insets(500, 0, 0, 400));
+		coin_mess.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		gameRoot.getChildren().add(coin_mess);
+		
+		Label platform_mess=new Label();
+		platform_mess.setText(String.format("     Sauter sur les plateforme\n pour vous deplacer et obtenir le\n          maximum de coin"));
+		platform_mess.setAlignment(Pos.CENTER);
+		platform_mess.setTextFill(Color.BLACK);
+		platform_mess.setPadding(new Insets(200, 0, 0, 700));
+		platform_mess.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		gameRoot.getChildren().add(platform_mess);
+		
+		Label obs_mess=new Label();
+		obs_mess.setText(String.format("    Eviter de toucher\n avec les carres rouge\n sinon vous êtes mort"));
+		obs_mess.setAlignment(Pos.CENTER);
+		obs_mess.setTextFill(Color.BLACK);
+		obs_mess.setPadding(new Insets(500, 0, 0, 2100));
+		obs_mess.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		gameRoot.getChildren().add(obs_mess);
+        
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 	
-	 private void update(){
+	private void update(){
 	        if (isPressed(KeyCode.W) && player.getTranslateY() >= 5){
 	            jumpPlayer();
 	        }
@@ -138,12 +164,11 @@ public class Tutorial extends Main {
 	    	}
 	    }
 
-
-	    private void winner_board() {
+	private void winner_board() {
 	    	Rectangle win=new Rectangle(1280, 720,Color.BLACK);
 	    	
 	    	VBox endBox=new VBox(50);
-			endBox.setPadding(new Insets(100, 0, 0, 450));
+			endBox.setPadding(new Insets(140, 0, 0, 420));
 	    	endBox.setAlignment(Pos.CENTER);
 	    	
 	    	Label endMessage=new Label();
@@ -161,7 +186,7 @@ public class Tutorial extends Main {
 			Button RestartButton =new Button();
 			RestartButton.setText("Recommencer");
 			RestartButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-			RestartButton.setPrefSize(200, 100);
+			RestartButton.setPrefSize(200, 50);
 			RestartButton.setOnAction(e->{
 				uiRoot.getChildren().remove(win);
 				uiRoot.getChildren().remove(endBox);
@@ -179,7 +204,7 @@ public class Tutorial extends Main {
 			Button menuButton =new Button();
 			menuButton.setText("Menu");
 			menuButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-			menuButton.setPrefSize(200, 100);
+			menuButton.setPrefSize(200, 50);
 			menuButton.setOnAction(e->{
 				StartScreen menu = new StartScreen();
 				try {
@@ -193,7 +218,7 @@ public class Tutorial extends Main {
 			Button quitButton =new Button();
 			quitButton.setText("Quitter");
 			quitButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-			quitButton.setPrefSize(200, 100);
+			quitButton.setPrefSize(200, 50);
 			quitButton.setOnAction(e->{
 				Platform.exit();
 			});
@@ -203,12 +228,12 @@ public class Tutorial extends Main {
 	    	uiRoot.getChildren().addAll(win,endBox);
 		}
 	 
-	 private void die() {
+	private void die() {
 	    	
 	    	Rectangle gameOverMask=new Rectangle(1280, 720,Color.BLACK);
 	    	
 	    	VBox endBox=new VBox(30);
-			endBox.setPadding(new Insets(80, 0, 0, 450));
+			endBox.setPadding(new Insets(120, 0, 0, 450));
 	    	endBox.setAlignment(Pos.CENTER);
 			
 			Label endMessage=new Label();
@@ -232,7 +257,7 @@ public class Tutorial extends Main {
 			Button RestartButton =new Button();
 			RestartButton.setText("Recommencer");
 			RestartButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-			RestartButton.setPrefSize(200, 100);
+			RestartButton.setPrefSize(200, 50);
 			RestartButton.setOnAction(e->{
 				uiRoot.getChildren().remove(gameOverMask);
 				uiRoot.getChildren().remove(endBox);
@@ -250,7 +275,7 @@ public class Tutorial extends Main {
 			Button menuButton =new Button();
 			menuButton.setText("Menu");
 			menuButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-			menuButton.setPrefSize(200, 100);
+			menuButton.setPrefSize(200, 50);
 			menuButton.setOnAction(e->{
 				StartScreen menu = new StartScreen();
 				try {
@@ -264,7 +289,7 @@ public class Tutorial extends Main {
 			Button quitButton =new Button();
 			quitButton.setText("Quitter");
 			quitButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-			quitButton.setPrefSize(200, 100);
+			quitButton.setPrefSize(200, 50);
 			quitButton.setOnAction(e->{
 				Platform.exit();
 			});
@@ -274,62 +299,66 @@ public class Tutorial extends Main {
 	    	uiRoot.getChildren().addAll(gameOverMask,endBox);
 	    }
 	    
-	    private void movePlayerX(int value){
-	    boolean movingRight = value > 0;
-	    for (int i=0; i < Math.abs(value);i++){
-	        for (Node platform : platforms){
-	            if(player.getBoundsInParent().intersects(platform.getBoundsInParent())){
-	                if(movingRight){
-	                    if (player.getTranslateX() + 40 == platform.getTranslateX()){
-	                        return;
-	                    }
-	                }else {
-	                    if (player.getTranslateX() == platform.getTranslateX() + 60) {
-	                        return;
-	                    }
-	                }
-	            }
-	        }
-	        player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
-	        }
-	    }
-	    private void movePlayerY(int value){
-	        boolean movingDown = value > 0;
-	        for (int i=0; i < Math.abs(value);i++){
-	            for (Node platform : platforms){
-	                if(player.getBoundsInParent().intersects(platform.getBoundsInParent())){
-	                    if(movingDown){
-	                        if (player.getTranslateY() + 40 == platform.getTranslateY()){
-	                            canJump = true;
-	                            return;
-	                        }
-	                    }else {
-	                        if (player.getTranslateY() == platform.getTranslateY() + 60) {
-	                            return;
-	                        }
-	                    }
-	                }
-	            }
-	            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-	        }
-	    }
-	    private void jumpPlayer(){
-	    if(canJump){
-	        playerVelocity = playerVelocity.add(0, -30);
-	        canJump = false;
-	        }
-	    }
-	    private Node createEntity(int x, int y, int w, int h, Color color){
-	        Rectangle entity = new Rectangle(w, h);
-	        entity.setTranslateX(x);
-	        entity.setTranslateY(y);
-	        entity.setFill(color);
-	        entity.getProperties().put("alive", true);
-	        gameRoot.getChildren().add(entity);
-	        return entity;
-
-	    }
-	    private boolean isPressed(KeyCode key){
+	private void movePlayerX(int value){
+		    boolean movingRight = value > 0;
+		    for (int i=0; i < Math.abs(value);i++){
+		        for (Node platform : platforms){
+		            if(player.getBoundsInParent().intersects(platform.getBoundsInParent())){
+		                if(movingRight){
+		                    if (player.getTranslateX() + 40 == platform.getTranslateX()){
+		                        return;
+		                    }
+		                }else {
+		                    if (player.getTranslateX() == platform.getTranslateX() + 60) {
+		                        return;
+		                    }
+		                }
+		            }
+		        }
+		        player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
+		        }
+		    }
+	
+	private void movePlayerY(int value){
+		        boolean movingDown = value > 0;
+		        for (int i=0; i < Math.abs(value);i++){
+		            for (Node platform : platforms){
+		                if(player.getBoundsInParent().intersects(platform.getBoundsInParent())){
+		                    if(movingDown){
+		                        if (player.getTranslateY() + 40 == platform.getTranslateY()){
+		                            canJump = true;
+		                            return;
+		                        }
+		                    }else {
+		                        if (player.getTranslateY() == platform.getTranslateY() + 60) {
+		                            return;
+		                        }
+		                    }
+		                }
+		            }
+		            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
+		        }
+		    }
+	
+	private void jumpPlayer(){
+		    if(canJump){
+		        playerVelocity = playerVelocity.add(0, -30);
+		        canJump = false;
+		        }
+		    }
+	
+	private Node createEntity(int x, int y, int w, int h, Color color){
+		        Rectangle entity = new Rectangle(w, h);
+		        entity.setTranslateX(x);
+		        entity.setTranslateY(y);
+		        entity.setFill(color);
+		        entity.getProperties().put("alive", true);
+		        gameRoot.getChildren().add(entity);
+		        return entity;
+	
+		    }
+	
+	private boolean isPressed(KeyCode key){
 	    return keys.getOrDefault(key, false);
 	    }
 
@@ -345,6 +374,9 @@ public class Tutorial extends Main {
         
         primaryStage.setTitle("Jump - Tutoriel");
         primaryStage.setScene(scene);
+        primaryStage.setMaxHeight(720);
+        primaryStage.setMaxWidth(1280);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         AnimationTimer timer = new AnimationTimer() {
