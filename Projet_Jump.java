@@ -169,7 +169,7 @@ public class Main extends Application {
 		Button RestartButton =new Button();
 		RestartButton.setText("Recommencer");
 		RestartButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-		RestartButton.setPrefSize(200, 100);
+		RestartButton.setPrefSize(200, 50);
 		RestartButton.setOnAction(e->{
 			uiRoot.getChildren().remove(win);
 			uiRoot.getChildren().remove(endBox);
@@ -187,7 +187,7 @@ public class Main extends Application {
 		Button menuButton =new Button();
 		menuButton.setText("Menu");
 		menuButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-		menuButton.setPrefSize(200, 100);
+		menuButton.setPrefSize(200, 50);
 		menuButton.setOnAction(e->{
 			StartScreen menu = new StartScreen();
 			try {
@@ -201,7 +201,7 @@ public class Main extends Application {
 		Button quitButton =new Button();
 		quitButton.setText("Quitter");
 		quitButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-		quitButton.setPrefSize(200, 100);
+		quitButton.setPrefSize(200, 50);
 		quitButton.setOnAction(e->{
 			Platform.exit();
 		});
@@ -235,7 +235,7 @@ public class Main extends Application {
 		Button RestartButton =new Button();
 		RestartButton.setText("Recommencer");
 		RestartButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-		RestartButton.setPrefSize(200, 100);
+		RestartButton.setPrefSize(200, 50);
 		RestartButton.setOnAction(e->{
 			uiRoot.getChildren().remove(gameOverMask);
 			uiRoot.getChildren().remove(endBox);
@@ -253,7 +253,7 @@ public class Main extends Application {
 		Button menuButton =new Button();
 		menuButton.setText("Menu");
 		menuButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-		menuButton.setPrefSize(200, 100);
+		menuButton.setPrefSize(200, 50);
 		menuButton.setOnAction(e->{
 			StartScreen menu = new StartScreen();
 			try {
@@ -267,7 +267,7 @@ public class Main extends Application {
 		Button quitButton =new Button();
 		quitButton.setText("Quitter");
 		quitButton.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-		quitButton.setPrefSize(200, 100);
+		quitButton.setPrefSize(200, 50);
 		quitButton.setOnAction(e->{
 			Platform.exit();
 		});
