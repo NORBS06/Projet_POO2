@@ -131,7 +131,7 @@ public class Tutorial extends Main {
 	    	for (Node coin : coins) {
 	    		if (player.getBoundsInParent().intersects(coin.getBoundsInParent())){
 	    			coin.getProperties().put("alive", false);
-	    			point+=1;
+	    			point+=50;
 	    			score.setText(String.format("score: %d",point));
 	    		}
 	    	}

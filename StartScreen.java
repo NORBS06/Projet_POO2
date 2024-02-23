@@ -76,7 +76,6 @@ public class StartScreen extends Application {
 
        // Création de la scène
        Scene scene = new Scene(layout, 1280, 720);
-       scene.setFill(Color.web("EAF4F4",1.0));
 
        // Affichage de la scène
        primaryStage.setScene(scene);
