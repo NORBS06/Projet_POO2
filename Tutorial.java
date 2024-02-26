@@ -90,6 +90,14 @@ public class Tutorial extends Main {
             }
         });
         
+        Label move_mess=new Label();
+        move_mess.setText(String.format("Utiliser les touches 'W, A, S, D'\n pour sauter et vous deplacer"));
+        move_mess.setAlignment(Pos.CENTER);
+        move_mess.setTextFill(Color.BLACK);
+        move_mess.setPadding(new Insets(300, 0, 0, 200));
+        move_mess.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
+		gameRoot.getChildren().add(move_mess);
+        
         Label coin_mess=new Label();
 		coin_mess.setText(String.format("Toucher avec les carres jaune\n pour obtenir des points"));
 		coin_mess.setAlignment(Pos.CENTER);
