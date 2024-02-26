@@ -1,10 +1,11 @@
 # Projet_POO2
 ## name of project : Jump
+#
 ## Created by : 
 ### Norbert A. R
 ### Ballah V
 ### Bacar H. H
-
+#
 ### How to use the files
 #### 1. Make sure to have eclipse installed and set up.
 #### 2. Download or git clone the repo  on your local machine.
