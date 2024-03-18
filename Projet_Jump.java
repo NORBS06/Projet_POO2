@@ -25,6 +25,7 @@ import javafx.scene.text.FontWeight;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 
 public class Main extends Application {
@@ -53,6 +54,26 @@ public class Main extends Application {
         Rectangle bg = new Rectangle(1280, 720);
         bg.setFill(Color.LIGHTBLUE);
         levelWidth = LevelData.LEVEL1[0].length() * 60;
+        
+        Random random = new Random(); 	
+        String[] selectedLevel;	
+        
+        int levelChoice = random.nextInt(4) ;
+        
+        switch (levelChoice) {
+            case 0:
+                selectedLevel = LevelData.LEVEL1;
+                break;
+            case 1:
+                selectedLevel = LevelData.LEVEL2;
+                break;
+            case 2:
+                selectedLevel = LevelData.LEVEL3;
+                break;
+            default:
+                selectedLevel = LevelData.LEVEL1; // Default to LEVEL1 if something goes wrong
+                break;
+        }
 
         score=new Label();
         score.setText(String.format("score: %d", point));
@@ -60,8 +81,8 @@ public class Main extends Application {
         score.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 20));
         uiRoot.getChildren().add(score);
         
-        for (int i=0; i< LevelData.LEVEL1.length; i++){
-            String line = LevelData.LEVEL1[i];
+        for (int i=0; i< selectedLevel.length; i++){
+            String line = selectedLevel[i];
             for (int j=0; j <line.length();j++){
                 switch (line.charAt(j)){
                     case '0':
