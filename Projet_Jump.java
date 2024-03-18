@@ -255,14 +255,15 @@ public class Main extends Application {
 	
     private void movePlayerX(int value){
     boolean movingRight = value > 0;
-    for (int i=0; i < Math.abs(value);i++){
-        for (Node platform : platforms){
-            if(player.getBoundsInParent().intersects(platform.getBoundsInParent())){
-                if(movingRight){
-                    if (player.getTranslateX() + 40 == platform.getTranslateX()){
+    for (int i = 0; i < Math.abs(value); i++) {
+        for (Node platform : platforms) {
+            if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
+                if (movingRight) {
+                    if (player.getTranslateX() + 40 == platform.getTranslateX()) {
                         return;
                     }
-                }else {
+                }
+                else {
                     if (player.getTranslateX() == platform.getTranslateX() + 60) {
                         return;
                     }
@@ -270,21 +271,23 @@ public class Main extends Application {
             }
         }
         player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
-        }
+    }
     }
     
 
     private void movePlayerY(int value){
         boolean movingDown = value > 0;
-        for (int i=0; i < Math.abs(value);i++){
-            for (Node platform : platforms){
-                if(player.getBoundsInParent().intersects(platform.getBoundsInParent())){
-                    if(movingDown){
-                        if (player.getTranslateY() + 40 == platform.getTranslateY()){
+        for (int i = 0; i < Math.abs(value); i++) {
+            for (Node platform : platforms) {
+                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
+                    if (movingDown) {
+                        if (player.getTranslateY() + 40 == platform.getTranslateY()) {
+                            player.setTranslateY(player.getTranslateY() - 1);
                             canJump = true;
                             return;
                         }
-                    }else {
+                    }
+                    else {
                         if (player.getTranslateY() == platform.getTranslateY() + 60) {
                             return;
                         }
