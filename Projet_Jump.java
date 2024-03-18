@@ -17,10 +17,12 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +53,11 @@ public class Main extends Application {
     
     
     private void initContent(){
+    	
+    	Image backgroundImage = new Image(getClass().getResource("/bg1.jpg").toExternalForm());
+    	
         Rectangle bg = new Rectangle(1280, 720);
-        bg.setFill(Color.LIGHTBLUE);
+        bg.setFill(new ImagePattern(backgroundImage));
         levelWidth = LevelData.LEVEL1[0].length() * 60;
         
         Random random = new Random(); 	
@@ -69,6 +74,9 @@ public class Main extends Application {
                 break;
             case 2:
                 selectedLevel = LevelData.LEVEL3;
+                break;
+            case 3:
+                selectedLevel = LevelData.LEVEL4;
                 break;
             default:
                 selectedLevel = LevelData.LEVEL1; // Default to LEVEL1 if something goes wrong

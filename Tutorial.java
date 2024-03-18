@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -20,6 +21,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -47,8 +49,10 @@ public class Tutorial extends Main {
     
 	
 	private void initContent(){
+		Image backgroundImage = new Image(getClass().getResource("/bg1.jpg").toExternalForm());
+		
         Rectangle bg = new Rectangle(1280, 720);
-        bg.setFill(Color.LIGHTBLUE);
+        bg.setFill(new ImagePattern(backgroundImage));
         levelWidth = LevelData.TUTO[0].length() * 60;
 
         score=new Label();
